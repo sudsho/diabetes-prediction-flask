@@ -1,0 +1,35 @@
+# default config for training the diabetes classifier
+
+data:
+  path: data/diabetes.csv
+  target: Outcome
+  # columns where 0 is actually a missing value, replace with NaN before imputing
+  zero_is_missing:
+    - Glucose
+    - BloodPressure
+    - SkinThickness
+    - Insulin
+    - BMI
+
+split:
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+models:
+  logreg:
+    C: 1.0
+    max_iter: 200
+  random_forest:
+    n_estimators: 200
+    max_depth: 8
+    random_state: 42
+  xgboost:
+    n_estimators: 200
+    max_depth: 4
+    learning_rate: 0.1
+    random_state: 42
+
+output:
+  model_path: models/diabetes.pkl
+  metrics_path: models/metrics.json
