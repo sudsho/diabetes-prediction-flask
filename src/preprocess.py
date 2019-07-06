@@ -36,3 +36,10 @@ def median_impute(df, cols):
         med = df[c].median()
         df[c] = df[c].fillna(med)
     return df
+
+
+def prepare_xy(df):
+    """Split a clean df into feature matrix X and target vector y."""
+    X = df[FEATURE_COLS].values
+    y = df[TARGET_COL].values
+    return X, y
