@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Result</h1>
+        {% if prediction == 1 %}
+            <p class="result positive">Predicted: positive (likely diabetic)</p>
+        {% else %}
+            <p class="result negative">Predicted: negative</p>
+        {% endif %}
+        {% if probability is not none %}
+            <p>P(positive) = {{ "%.3f" % probability }}</p>
+        {% endif %}
+        <h3>Inputs</h3>
+        <ul>
+            {% for k, v in values.items() %}
+            <li>{{ k }}: {{ v }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/">Try another</a>
+    </div>
+</body>
+</html>
