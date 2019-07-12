@@ -48,12 +48,14 @@ def main():
     log.info("rows=%d features=%d", X.shape[0], X.shape[1])
 
     sp = cfg["split"]
+    stratify = y if sp.get("stratify", True) else None
     X_tr, X_te, y_tr, y_te = train_test_split(
         X, y,
         test_size=sp["test_size"],
         random_state=sp["random_state"],
-        stratify=y if sp.get("stratify", True) else None,
+        stratify=stratify,
     )
+    log.info("train=%d test=%d", len(X_tr), len(X_te))
 
     params = cfg["models"][args.model]
     clf = model_lib.build_model(args.model, params)
