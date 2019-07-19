@@ -25,13 +25,18 @@ def parse_args():
     return p.parse_args()
 
 
-def evaluate(clf, X_test, y_test):
-    pred = clf.predict(X_test)
+def evaluate(clf, X_test, y_test, threshold=0.5):
+    if hasattr(clf, "predict_proba") and threshold != 0.5:
+        proba = clf.predict_proba(X_test)[:, 1]
+        pred = (proba >= threshold).astype(int)
+    else:
+        pred = clf.predict(X_test)
     return {
         "accuracy": accuracy_score(y_test, pred),
         "precision": precision_score(y_test, pred),
         "recall": recall_score(y_test, pred),
         "f1": f1_score(y_test, pred),
+        "threshold": threshold,
     }
 
 
