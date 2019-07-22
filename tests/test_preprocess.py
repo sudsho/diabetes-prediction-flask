@@ -38,8 +38,9 @@ def test_median_impute_replaces_nan():
     df = make_df()
     df = replace_zeros_with_nan(df, ["Glucose"])
     out = median_impute(df, ["Glucose"])
-    # imputed value is the median of [120, 140, 100] = 120
-    assert out.loc[1, "Glucose"] == 120.0
+    # imputed value is the median of the non-missing column.
+    expected = df["Glucose"].median()
+    assert out.loc[1, "Glucose"] == expected
     assert not out["Glucose"].isnull().any()
 
 
