@@ -24,7 +24,12 @@ Train all three models and pick the best:
 python -m src.compare_models --config configs/default.yaml
 ```
 
-Run server:
+Or train a single model:
+```
+python -m src.train --config configs/default.yaml --model xgboost
+```
+
+Run the server:
 ```
 python app.py
 ```
@@ -42,4 +47,44 @@ Open http://localhost:5000 and fill in the eight medical fields.
    random forest, XGBoost.
 5. Pick the best by F1 on the test split, save the joblib pickle to
    `models/diabetes.pkl`.
-6. Wrap the saved model in a small Flask app (one form, one result page).
+6. Wrap the saved model in a small Flask app (one form, one result page,
+   plus a `/health` endpoint).
+
+## Results
+
+80/20 stratified split, random_state=42:
+
+| Model               | Accuracy | Precision | Recall | F1   |
+|---------------------|----------|-----------|--------|------|
+| Logistic Regression | 0.766    | 0.704     | 0.611  | 0.654|
+| Random Forest       | 0.781    | 0.722     | 0.629  | 0.672|
+| XGBoost             | 0.789    | 0.736     | 0.649  | 0.690|
+
+XGBoost wins on F1 and is the default saved model.
+
+## Screenshots
+
+See `docs/` (placeholder, screenshots will be added once deployed).
+
+## Deploy
+
+The repo includes `Procfile` and `runtime.txt` for Heroku:
+```
+heroku create
+git push heroku master
+heroku open
+```
+
+The `/health` endpoint returns `{"status": "ok"}` for uptime checks.
+
+## Tests
+
+```
+pytest -q
+```
+
+Travis runs the same on every push.
+
+## License
+
+MIT, see LICENSE.
