@@ -1,5 +1,9 @@
 # diabetes-prediction-flask
 
+[![Build Status](https://travis-ci.org/sudsho/diabetes-prediction-flask.svg?branch=master)](https://travis-ci.org/sudsho/diabetes-prediction-flask)
+[![Python](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Predicting diabetes onset on the Pima Indians Diabetes dataset and serving the
 trained model behind a Flask form.
 
