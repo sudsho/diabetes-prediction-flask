@@ -68,7 +68,7 @@ XGBoost wins on F1 and is the default saved model.
 
 ## Screenshots
 
-See `docs/` (placeholder, screenshots will be added once deployed).
+See `docs/` for screenshots of the form and the prediction result page.
 
 ## Deploy
 
