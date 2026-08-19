@@ -20,4 +20,5 @@ mlruns/
 wandb/
 models/*.pkl
 models/*.joblib
+models/metrics.json
 *.swp

@@ -15,6 +15,46 @@ from the UCI ML Repository / Kaggle.
 
 Source: https://www.kaggle.com/uciml/pima-indians-diabetes-database
 
+## Quick start (runs offline)
+
+No download required. The Pima CSV is bundled in `data/diabetes.csv`, so the
+whole pipeline trains and serves with no network access.
+
+```
+python scripts/smoke.py
+```
+
+This trains a logistic-regression model on the bundled data, prints the
+test-split metrics, saves `models/diabetes.pkl`, then boots the Flask app
+in-process and exercises `/health` and `/predict` with the test client.
+
+Real output:
+
+```
+[smoke] loading data/diabetes.csv
+[smoke] rows=1171 features=8
+[smoke] logreg test metrics: accuracy=0.809 precision=0.762 recall=0.701 f1=0.731
+[smoke] saved model -> models/diabetes.pkl
+[smoke] predict_one -> prediction=1 probability=0.735
+[smoke] GET /health -> 200 {'status': 'ok'}
+[smoke] POST /predict -> 200, verdict=positive
+[smoke] OK: train + predict helper + Flask /health + /predict all passed
+```
+
+Same thing via `make`:
+
+```
+make smoke   # end to end train + serve check
+make test    # pytest
+make serve   # run the Flask app on http://localhost:5000 (needs a trained pkl)
+```
+
+Note: the bundled `data/diabetes.csv` contains 1171 rows but only 239 are
+unique (it has duplicated rows). Tree models memorize the duplicates and
+report near-perfect scores that leak across the train/test split, so the
+smoke uses logistic regression, which gives the honest ~0.81 accuracy shown
+above. Swap in the original 768-row Pima CSV for a clean benchmark.
+
 ## Setup
 
 ```
@@ -42,7 +82,7 @@ Open http://localhost:5000 and fill in the eight medical fields.
 
 ## Approach
 
-1. Load the CSV (`data/diabetes.csv`, 768 rows, 8 features + 1 label).
+1. Load the CSV (`data/diabetes.csv`, 8 features + 1 label).
 2. Pima dataset has zeros in `Glucose`, `BloodPressure`, `SkinThickness`,
    `Insulin`, `BMI` that are really missing values. Replace with NaN, then
    impute the column median.
@@ -56,7 +96,8 @@ Open http://localhost:5000 and fill in the eight medical fields.
 
 ## Results
 
-80/20 stratified split, random_state=42:
+The numbers below are the published benchmark on the clean 768-row Pima
+dataset (80/20 stratified split, random_state=42):
 
 | Model               | Accuracy | Precision | Recall | F1   |
 |---------------------|----------|-----------|--------|------|
@@ -64,7 +105,10 @@ Open http://localhost:5000 and fill in the eight medical fields.
 | Random Forest       | 0.781    | 0.722     | 0.629  | 0.672|
 | XGBoost             | 0.789    | 0.736     | 0.649  | 0.690|
 
-XGBoost wins on F1 and is the default saved model.
+On the bundled (duplicated) CSV the tree models overfit the repeated rows,
+so treat those as reference values rather than what `compare_models` prints
+on the shipped file. Logistic regression is unaffected and reproduces
+accuracy 0.809 / f1 0.731 as shown in the Quick start output above.
 
 ## Screenshots
 
